@@ -20,7 +20,7 @@ struct RoomDataService {
     typealias roomListClosure = (Array<Room>?) -> Void
     typealias serviceCallback = (serviceState) -> Void
     typealias messageEventCallback = (Message?) -> Void
-    //typealias addUserJoinedCallBack = (serviceState) -> Void
+    typealias currentMemberCallback = (Int?) -> Void
     
     
     func getRoomList(completionHandler: @escaping roomListClosure) {
@@ -75,21 +75,84 @@ struct RoomDataService {
     }
     
     // MARK: add user
-    func addUserJoined(room: Room, user: User, completionHandle: @escaping serviceCallback) {
+    func addUserJoined(room: Room, user: User, completionHandlerHandle: @escaping serviceCallback) {
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        let user = ["name" : "\(user.name)"]
+        
         let url = "Room/\(room.id)/User"
-        let newUserRef = ref.child(url).childByAutoId()
-        newUserRef.setValue(user) {
+        
+        var newUserRef = ref.child(url)
+        if user.type == .publicUser {
+            newUserRef = newUserRef.child(user.id)
+        } else if user.type == .privateUser {
+            newUserRef = newUserRef.childByAutoId()
+        }
+        
+        let userData = ["name" : "\(user.name)"]
+        newUserRef.setValue(userData) {
             (error, ref) in
             if error != nil {
-                completionHandle(serviceState.error)
+                completionHandlerHandle(serviceState.error)
             } else {
                 InfoDataHolder.user.id = newUserRef.key
-                completionHandle(serviceState.success)
+                completionHandlerHandle(serviceState.success)
             }
         }
+    }
+    
+    func addCurrentMember(room: Room, completionHandler: @escaping serviceCallback) {
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        let url = "Room/\(room.id)/currentMember"
+        getCurrentMember(room: room) {
+            callback in
+            if let currentMember = callback {
+                ref.child(url).setValue("\(currentMember + 1)") {
+                    (error, ref) -> Void in
+                    if error != nil {
+                        completionHandler(serviceState.error)
+                    } else {
+                        completionHandler(serviceState.success)
+                    }
+                }
+            }
+        }
+    }
+    
+    func removeCurrentMember(room: Room, completionHandler: @escaping serviceCallback) {
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        let url = "Room/\(room.id)/currentMember"
+        getCurrentMember(room: room) {
+            callback in
+            if let currentMember = callback {
+                ref.child(url).setValue("\(currentMember - 1)") {
+                    (error, ref) -> Void in
+                    if error != nil {
+                        completionHandler(serviceState.error)
+                    } else {
+                        completionHandler(serviceState.success)
+                    }
+                }
+            }
+        }
+    }
+    
+    func getCurrentMember(room: Room, completionHandler: @escaping currentMemberCallback) {
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        let url = "Room/\(room.id)/currentMember"
+        ref.child(url).observeSingleEvent(of: .value, with: {
+            (snapshot) -> Void in
+            DispatchQueue.main.async {
+                if snapshot.value != nil {
+                    let numb = snapshot.value as? String
+                    completionHandler(Int(numb!))
+                } else {
+                    completionHandler(nil)
+                }
+            }
+        })
     }
     
     // MARK: add message

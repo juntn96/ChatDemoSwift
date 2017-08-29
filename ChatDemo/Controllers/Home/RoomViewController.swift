@@ -51,12 +51,19 @@ class RoomViewController: UIViewController {
     }
     
     @IBAction func backButton(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
         let service = RoomDataService()
         service.removeUserOut(room: room, user: InfoDataHolder.user) { (callback) in
             if callback == serviceState.success {
                 // TODO: do something here
-                
+                service.removeCurrentMember(room: self.room) {
+                    callback in
+                    if callback == serviceState.success {
+                        // TODO:
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
+                        // TODO: show alert here
+                    }
+                }
             }
             if callback == serviceState.error {
                 // TODO: show alert here

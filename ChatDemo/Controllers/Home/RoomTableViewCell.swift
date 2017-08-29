@@ -15,6 +15,16 @@ class RoomTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+//        self.layer.borderWidth = 0.5
+//        self.layer.borderColor = UIColor.white.cgColor
+        addBottomBorderWithColor(color: .white, width: 0.5)
+    }
+    
+    func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
+        let border = CALayer()
+        border.backgroundColor = color.cgColor
+        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width: self.frame.size.width, height: width)
+        self.layer.addSublayer(border)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -12,6 +12,7 @@ class UserDataService {
     
     let urlLogin = "http://10.16.23.247/ChatDemo/api/login.php"
     let urlInsert = "http://10.16.23.247/ChatDemo/api/insert.php"
+    let urlLogout = "http://10.16.23.247/ChatDemo/api/logout.php"
     
     // default value to stored user data
     //let defaultValue = UserDefaults.standard
@@ -27,8 +28,7 @@ class UserDataService {
         // request to url
         Alamofire.request(urlLogin, method: .post, parameters: parameters).responseJSON {
             response in
-            //
-            print(response)
+        
             if let result = response.result.value {
                 let jsonData = result as! NSDictionary
                 completionHandler(jsonData)
@@ -50,6 +50,20 @@ class UserDataService {
                 completionHandler(jsonData)
             } else {
                 completionHandler(nil)
+            }
+        }
+    }
+    
+    func logout(id: String, completionHandle: @escaping serverCallback) {
+        let params: Parameters = ["id" : id];
+
+        Alamofire.request(urlLogout, method: .post, parameters: params).responseJSON {
+            response in
+            if let result = response.result.value {
+                let jsonData = result as! NSDictionary
+                completionHandle(jsonData)
+            } else {
+                completionHandle(nil)
             }
         }
     }

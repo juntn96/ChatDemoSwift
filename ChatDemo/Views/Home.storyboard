@@ -229,39 +229,32 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jlg-eW-hti">
                                 <rect key="frame" x="0.0" y="94" width="375" height="573"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="45" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="psl-oQ-Prd">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="psl-oQ-Prd">
                                         <rect key="frame" x="0.0" y="8" width="375" height="565.5"/>
                                         <color key="backgroundColor" red="0.20392156859999999" green="0.28627450980000002" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="sectionIndexBackgroundColor" red="0.20392156859999999" green="0.28627450980000002" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RoomTableViewCell" rowHeight="45" id="3Cf-e5-6Y0" customClass="RoomTableViewCell" customModule="ChatDemo" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="28" width="375" height="45"/>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RoomTableViewCell" rowHeight="60" id="3Cf-e5-6Y0" customClass="RoomTableViewCell" customModule="ChatDemo" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="28" width="375" height="60"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Cf-e5-6Y0" id="IyS-bV-qSB">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Room: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOj-2Y-Fit">
-                                                            <rect key="frame" x="8" y="8" width="53.5" height="36.5"/>
+                                                            <rect key="frame" x="8" y="20" width="53.5" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="abcxyz" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fTb-70-fWh">
-                                                            <rect key="frame" x="61.5" y="8" width="54.5" height="36.5"/>
+                                                            <rect key="frame" x="65.5" y="20" width="54.5" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rcf-RE-1qj">
-                                                            <rect key="frame" x="0.0" y="44.5" width="375" height="0.5"/>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="0.5" id="k2a-Ju-ueA"/>
-                                                            </constraints>
-                                                        </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0/16" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fyP-RX-iJU">
-                                                            <rect key="frame" x="333" y="8" width="34" height="36.5"/>
+                                                            <rect key="frame" x="333" y="20.5" width="34" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -269,20 +262,17 @@
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.20392156859999999" green="0.28627450980000002" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="FOj-2Y-Fit" firstAttribute="top" secondItem="IyS-bV-qSB" secondAttribute="topMargin" id="CUc-Zm-hEv"/>
-                                                        <constraint firstItem="fTb-70-fWh" firstAttribute="top" secondItem="IyS-bV-qSB" secondAttribute="topMargin" id="Ccm-t6-j5w"/>
-                                                        <constraint firstItem="fTb-70-fWh" firstAttribute="leading" secondItem="FOj-2Y-Fit" secondAttribute="trailing" id="GxJ-46-FzV"/>
-                                                        <constraint firstItem="rcf-RE-1qj" firstAttribute="top" secondItem="FOj-2Y-Fit" secondAttribute="bottom" id="Iyz-wR-gaX"/>
-                                                        <constraint firstItem="fyP-RX-iJU" firstAttribute="trailing" secondItem="IyS-bV-qSB" secondAttribute="trailingMargin" id="ME2-3m-3TK"/>
-                                                        <constraint firstItem="rcf-RE-1qj" firstAttribute="top" secondItem="fyP-RX-iJU" secondAttribute="bottom" id="MY2-t8-6WK"/>
-                                                        <constraint firstAttribute="bottom" secondItem="rcf-RE-1qj" secondAttribute="bottom" id="NZY-c8-NeY"/>
-                                                        <constraint firstItem="FOj-2Y-Fit" firstAttribute="leading" secondItem="IyS-bV-qSB" secondAttribute="leadingMargin" id="X9r-tt-4zg"/>
-                                                        <constraint firstItem="rcf-RE-1qj" firstAttribute="top" secondItem="fTb-70-fWh" secondAttribute="bottom" id="iC2-FF-ZHp"/>
-                                                        <constraint firstAttribute="trailing" secondItem="rcf-RE-1qj" secondAttribute="trailing" id="oun-Ba-YX2"/>
-                                                        <constraint firstItem="fyP-RX-iJU" firstAttribute="top" secondItem="IyS-bV-qSB" secondAttribute="topMargin" id="sTV-yY-y3I"/>
-                                                        <constraint firstItem="rcf-RE-1qj" firstAttribute="leading" secondItem="IyS-bV-qSB" secondAttribute="leading" id="z62-hA-rS1"/>
+                                                        <constraint firstItem="FOj-2Y-Fit" firstAttribute="leading" secondItem="IyS-bV-qSB" secondAttribute="leading" constant="8" id="2FC-rO-DOa"/>
+                                                        <constraint firstAttribute="trailing" secondItem="fyP-RX-iJU" secondAttribute="trailing" constant="8" id="W8w-8J-DyN"/>
+                                                        <constraint firstItem="fyP-RX-iJU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fTb-70-fWh" secondAttribute="trailing" constant="4" id="lOx-z6-Y0W"/>
+                                                        <constraint firstItem="fTb-70-fWh" firstAttribute="leading" secondItem="FOj-2Y-Fit" secondAttribute="trailing" constant="4" id="ooW-Im-CE9"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
+                                                <constraints>
+                                                    <constraint firstItem="FOj-2Y-Fit" firstAttribute="centerY" secondItem="3Cf-e5-6Y0" secondAttribute="centerY" id="EAW-1C-gZ0"/>
+                                                    <constraint firstItem="fyP-RX-iJU" firstAttribute="centerY" secondItem="3Cf-e5-6Y0" secondAttribute="centerY" id="iCX-eI-9TO"/>
+                                                    <constraint firstItem="fTb-70-fWh" firstAttribute="centerY" secondItem="3Cf-e5-6Y0" secondAttribute="centerY" id="zNq-qJ-2gD"/>
+                                                </constraints>
                                                 <connections>
                                                     <outlet property="roomNameLabel" destination="fTb-70-fWh" id="ESW-ZQ-Qor"/>
                                                     <outlet property="roomNumberLabel" destination="fyP-RX-iJU" id="NrJ-GC-73J"/>

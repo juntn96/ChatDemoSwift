@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class LoginViewController: UIViewController {
 
@@ -32,7 +33,8 @@ class LoginViewController: UIViewController {
         let name = userNameTextField.text
         let pwd = passwordTextField.text
         let service = UserDataService()
-        service.login(name: name!, password: pwd!) {
+        let encodePwd = pwd?.toBase64()
+        service.login(name: name!, password: encodePwd!) {
             callback in
             if callback != nil {
                 if !(callback?.value(forKey: "error") as! Bool) {
@@ -41,12 +43,24 @@ class LoginViewController: UIViewController {
                     let id = userData.value(forKey: "id") as! Int
                     let name = userData.value(forKey: "name") as! String
                     let email = userData.value(forKey: "email") as! String
+                    
+                    // WARNING: hold info by static
                     InfoDataHolder.user = User(id: "\(id)", name: name, email: email, type: .publicUser)
+                    
+                    let storyBoard = UIStoryboard(name: "Home", bundle: nil)
+                    let viewIndentifier = "HomeView"
+                    guard let home = storyBoard.instantiateViewController(withIdentifier: viewIndentifier) as? HomeViewController else {
+                        fatalError(StringMessage.errorMessage)
+                    }
+                    self.navigationController?.pushViewController(home, animated: true)
                 } else {
                     // TODO: error
+                    let message = callback?.value(forKey: "message") as! String
+                    self.view.makeToast(message)
                 }
             } else {
-                // TODO: Error
+                // TODO: error
+                
             }
         }
     }

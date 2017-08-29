@@ -42,8 +42,24 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func logoutButton(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
-        InfoDataHolder.user = User();
+        if (InfoDataHolder.user.type == .publicUser) {
+            let service = UserDataService()
+            service.logout(id: InfoDataHolder.user.id) {
+                callback in
+                if callback != nil {
+                    if !(callback?.value(forKey: "error") as! Bool) {
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
+                        // TODO: error
+                    }
+                } else {
+                    // TODO: error
+                }
+            }
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
+        InfoDataHolder.user = User()
     }
     
     @IBAction func addButton(_ sender: Any) {
@@ -79,7 +95,7 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 30.0
+        return 60.0
     }
 }
 
@@ -106,11 +122,16 @@ extension HomeViewController: UITableViewDataSource {
         let service = RoomDataService()
         service.addUserJoined(room: room, user: InfoDataHolder.user) { (callback) in
             if callback == serviceState.success {
-                // TODO: do something here
-                let roomView = self.storyboard?.instantiateViewController(withIdentifier: "RoomView") as! RoomViewController
-                //room.listUsers.append(InfoDataHolder.user)
-                roomView.room = room
-                self.navigationController?.pushViewController(roomView, animated: true)
+                service.addCurrentMember(room: room) {
+                    callback in
+                    if callback == serviceState.success {
+                        let roomView = self.storyboard?.instantiateViewController(withIdentifier: "RoomView") as! RoomViewController
+                        roomView.room = room
+                        self.navigationController?.pushViewController(roomView, animated: true)
+                    } else {
+                        
+                    }
+                }
             }
             if callback == serviceState.error {
                 // TODO: show alert here
