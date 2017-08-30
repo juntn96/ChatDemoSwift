@@ -15,6 +15,12 @@ enum messageType {
     case hasLeftUser
 }
 
+enum messageStatus {
+    case sending
+    case sended
+    case error
+}
+
 class Message {
     var id: String
     var content: String

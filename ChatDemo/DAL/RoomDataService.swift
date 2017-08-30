@@ -44,7 +44,6 @@ struct RoomDataService {
                     roomList.append(room)
                 }
             }
-            
             // MARK: using typecalias closure to callback data
             // using Grand Central Dispatch (GCD) one way to make multi thread
             DispatchQueue.main.async {
@@ -84,7 +83,7 @@ struct RoomDataService {
         var newUserRef = ref.child(url)
         if user.type == .publicUser {
             newUserRef = newUserRef.child(user.id)
-        } else if user.type == .privateUser {
+        } else {
             newUserRef = newUserRef.childByAutoId()
         }
         
@@ -104,17 +103,12 @@ struct RoomDataService {
         var ref: DatabaseReference!
         ref = Database.database().reference()
         let url = "Room/\(room.id)/currentMember"
-        getCurrentMember(room: room) {
-            callback in
-            if let currentMember = callback {
-                ref.child(url).setValue("\(currentMember + 1)") {
-                    (error, ref) -> Void in
-                    if error != nil {
-                        completionHandler(serviceState.error)
-                    } else {
-                        completionHandler(serviceState.success)
-                    }
-                }
+        ref.child(url).setValue("\(room.currentMember + 1)") {
+            (error, ref) -> Void in
+            if error != nil {
+                completionHandler(serviceState.error)
+            } else {
+                completionHandler(serviceState.success)
             }
         }
     }
@@ -251,7 +245,9 @@ struct RoomDataService {
         ref = Database.database().reference()
         var message: Message? = nil
         let url = "Room/\(room.id)/Message"
-        ref.child(url).queryLimited(toLast: 20).observe(.childAdded, with: {
+        let messageRef = ref.child(url)
+        let messageQuery = messageRef.queryLimited(toLast: 10)
+        messageQuery.observe( .childAdded, with: {
             (snapshot) in
             if let messageData = snapshot.value as? Dictionary<String,String> {
                 if let content = messageData["content"],
@@ -259,20 +255,30 @@ struct RoomDataService {
                     let userID = messageData["userID"]
                 {
                     let user = User(id: userID, name: userName)
-                    message = Message(id: snapshot.key, content: content, user: user, type: .otherUserChat)
+                    
                     if userID == InfoDataHolder.user.id {
                         message = Message(id: snapshot.key, content: content, user: user, type: .currentUserChat)
+                    } else {
+                        message = Message(id: snapshot.key, content: content, user: user, type: .otherUserChat)
+                    }
+                }
+                // async callback
+                DispatchQueue.main.async {
+                    if message == nil {
+                        completionHandler(nil)
+                    } else {
+                        completionHandler(message)
+                        ref.removeAllObservers()
                     }
                 }
             }
-            // async callback
-            DispatchQueue.main.async {
-                if message == nil {
-                    completionHandler(nil)
-                } else {
-                    completionHandler(message)
-                }
-            }
         })
+    }
+    
+    func removeMessage(room: Room, message: Message) {
+        let ref: DatabaseReference!
+        ref = Database.database().reference()
+        let url = "Room/\(room.id)/Message/\(message.id)"
+        ref.child(url).removeValue()
     }
 }

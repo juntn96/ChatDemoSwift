@@ -21,6 +21,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         getRoomData()
     }
     
@@ -120,22 +123,53 @@ extension HomeViewController: UITableViewDataSource {
         let room = roomList[indexPath.row]
         // Add user to room
         let service = RoomDataService()
-        service.addUserJoined(room: room, user: InfoDataHolder.user) { (callback) in
-            if callback == serviceState.success {
-                service.addCurrentMember(room: room) {
-                    callback in
-                    if callback == serviceState.success {
-                        let roomView = self.storyboard?.instantiateViewController(withIdentifier: "RoomView") as! RoomViewController
-                        roomView.room = room
-                        self.navigationController?.pushViewController(roomView, animated: true)
-                    } else {
-                        
+        
+        let progress = MBProgressHUD.showAdded(to: self.view, animated: true)
+        progress.isUserInteractionEnabled = false
+        // MARK: 1- get current member from server
+        service.getCurrentMember(room: room) {
+            callback in
+            
+            // MARK: 2- check room is full or not
+            if let currentMember = callback {
+                room.currentMember = currentMember
+                
+                // MARK: 2.1- room full
+                if currentMember == room.maxMember {
+                    
+                    // toast alert when room full
+                    self.view.makeToast("This room is full")
+                }
+                else {
+                    // MARK 2.2- room not full
+                    // request server to add user into room
+                    service.addUserJoined(room: room, user: InfoDataHolder.user) { (callback) in
+                        if callback == serviceState.success {
+                            
+                            // on request success
+                            // request server  +1 current member
+                            service.addCurrentMember(room: room) {
+                                callback in
+                                if callback == serviceState.success {
+                                    
+                                    // on requesr success
+                                    let roomView = self.storyboard?.instantiateViewController(withIdentifier: "RoomView") as! RoomViewController
+                                    roomView.room = room
+                                    self.navigationController?.pushViewController(roomView, animated: true)
+                                } else {
+                                    // on request failed
+                                    // TODO: show alert here
+                                }
+                            }
+                        }
+                        if callback == serviceState.error {
+                            // on request failed
+                            // TODO: show alert here
+                        }
                     }
                 }
             }
-            if callback == serviceState.error {
-                // TODO: show alert here
-            }
+            progress.hide(animated: true)
         }
     }
 }

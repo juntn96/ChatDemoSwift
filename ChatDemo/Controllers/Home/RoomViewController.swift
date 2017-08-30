@@ -23,17 +23,14 @@ class RoomViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.initView()
-        //self.userObserve()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         self.messageObserve()
         self.observeUserJoined()
         self.observeUserHasLeft()
     }
     
     @IBAction func sendButton(_ sender: Any) {
-        let messageContent =  messageTextField.text!
+        let messageContent =  self.messageTextField.text!
+        self.messageTextField.text = ""
         let user = User(id: InfoDataHolder.user.id, name: InfoDataHolder.user.name)
         let message = Message(id: "", content: messageContent, user: user, type: .currentUserChat)
         let service = RoomDataService()
@@ -47,11 +44,14 @@ class RoomViewController: UIViewController {
 
             }
         }
-        self.messageTextField.text = ""
     }
     
     @IBAction func backButton(_ sender: Any) {
         let service = RoomDataService()
+        
+        let progress = MBProgressHUD.showAdded(to: self.view, animated: true)
+        progress.isUserInteractionEnabled = false
+        
         service.removeUserOut(room: room, user: InfoDataHolder.user) { (callback) in
             if callback == serviceState.success {
                 // TODO: do something here
@@ -68,6 +68,7 @@ class RoomViewController: UIViewController {
             if callback == serviceState.error {
                 // TODO: show alert here
             }
+            progress.hide(animated: true)
         }
     }
     
@@ -115,6 +116,8 @@ extension RoomViewController {
             (callback) in
             if let temp = callback {
                 self.insertMessageRow(withMessage: temp)
+                service.removeMessage(room: self.room, message: temp)
+//                self.messList.remove(at: 0)
             } else {
                 // TODO: show alert here
             }
@@ -126,6 +129,9 @@ extension RoomViewController {
         self.messageTableView.beginUpdates()
         self.messageTableView.insertRows(at: [IndexPath(row: self.messList.count - 1, section: 0)], with: .automatic)
         self.messageTableView.endUpdates()
+        let lastRow: Int = self.messageTableView.numberOfRows(inSection: 0) - 1
+        let indexPath = IndexPath(row: lastRow, section: 0);
+        self.messageTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
 }
 
